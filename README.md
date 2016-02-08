@@ -1,4 +1,4 @@
-#MEAN CRUD
+# MEAN CRUD
 Putting it all together
 
 + Mongoose
@@ -6,7 +6,7 @@ Putting it all together
 + AngularJS
  
 
-##Modularizing the MEAN stack's CRUD
+## Modularizing the MEAN stack's CRUD
 
 Now that the full stack is in place, we need two MVC structures:
 
@@ -18,7 +18,7 @@ Now that the full stack is in place, we need two MVC structures:
 
 We'll keep the same directory structure that we've been using.
 
-#Starting with the Express Components
+# Starting with the Express Components
 We'll create an *Article* module and all supporting code to CRUD.
 
 Steps:
@@ -27,7 +27,7 @@ Steps:
 + Create Express Controller
 + Express routing to create RESTful API (HTTP endpoints)
 
-##Mongoose Model for article
+## Mongoose Model for article
 
 ```JavaScript
 var mongoose = require('mongoose'),
@@ -76,7 +76,7 @@ module.exports = function() {
 };
 ```
 
-##Create the Express Controller
+## Create the Express Controller
 Create a new controller called `articles.server.controller.js` in `app/controllers`.
 
 Start with this code:
@@ -85,11 +85,11 @@ Start with this code:
 var mongoose = require('mongoose'),
     Article = mongoose.model('Article');
 ```
-###Implementing Express Controller Methods
+### Implementing Express Controller Methods
 
 ---
 
-####Error Handling
+#### Error Handling
 
 First, create an error-handling method for the controller.
 
@@ -124,7 +124,7 @@ exports.create = function(req, res) {
 };
 ```
 
-####LIST/READ
+#### LIST/READ
 ```JavaScript
 exports.list = function(req, res) {
   Article.find().sort('-created').populate('creator', 'firstName   lastName fullName').exec(function(err, articles) {
@@ -139,7 +139,7 @@ exports.list = function(req, res) {
 };
 ```
 
-####READ
+#### READ
 
 In order to read a specific article, we'll create a method which accepts the id of the article:
 
@@ -167,7 +167,7 @@ exports.read = function(req, res) {
 };
 ```
 
-####UPDATE
+#### UPDATE
 Update will also assume that we've already called the articleByID middleware.
 
 ```JavaScript
@@ -189,7 +189,7 @@ exports.update = function(req, res) {
 };
 ```
 
-####DELETE
+#### DELETE
 
 ```JavaScript
 exports.delete = function(req, res) {
@@ -207,11 +207,11 @@ exports.delete = function(req, res) {
 };
 ```
 
-##Authentication Middleware
+## Authentication Middleware
 
 ---
 
-###Check If User Logged In/Authenticated
+### Check If User Logged In/Authenticated
 
 We can check to see if the user is logged by adding this method to 
 `app/controllers/users.server.controller.js`:
@@ -228,7 +228,7 @@ exports.requiresLogin = function(req, res, next) {
 };
 ```
 
-####Implementing Authorization Middleware
+#### Implementing Authorization Middleware
 
 We want to ensure that a user is logged in for the following operations:
 
@@ -250,11 +250,11 @@ exports.hasAuthorization = function(req, res, next) {
 };
 ```
 
-##Exposing a RESTful API with Express Routes
+## Exposing a RESTful API with Express Routes
 
 ---
 
-###Reviewing REST
+### Reviewing REST
 
 REST provides a predictable pattern by which we describe and publish a web-based API:
 
@@ -276,7 +276,7 @@ So, our URLS may look like these examples:
 
 We have already created controller methods for these.
 
-####Routes
+#### Routes
 
 Now, we'll implement the routes that fulfill our RESTful API.  We create a new
 file, `articles.server.routes.js`, in the `app/routes` folder.
@@ -302,7 +302,7 @@ module.exports = function(app) {
 Notice the order in which route-handling methods are sent to each HTTP verb - they 
 will be called in this order (hence the *next()* middleware directive).
 
-####Configure Express Application
+#### Configure Express Application
 ```JavaScript
 var config = require('./config'),
     express = require('express'),
@@ -356,11 +356,11 @@ your NodeJS/Express/Mongoose application to do.
 
 This is it, your articles RESTful API is ready!
 
-#Over to the Client: AngularJS
+# Over to the Client: AngularJS
 
 ---
 
-##Using ngResource
+## Using ngResource
 
 Much as is the case with NodeJS and Express, AngularJS provides the `nqResource` module to 
 simplify communication between your AngularJS client and your HTTP Service-Endpoint backend.
@@ -371,7 +371,7 @@ AngularJS `$http` service module.
 
 We use `nqResource` to easily communicate with RESTful APIs.
 
-###Installing nqResource
+### Installing nqResource
 
 We use bower:
 
@@ -453,7 +453,7 @@ angular.element(document).ready(function() {
 });
 ```
 
-##Using the $resource Service
+## Using the $resource Service
 What `ngResource` gives us is a new **Factory** method that can be injected into an AngularJS
 entity.
 
@@ -497,14 +497,14 @@ var user = Users.get({
 });
 ```
 
-#Implementing the Client-Side (AngularJS) MVC Module
+# Implementing the Client-Side (AngularJS) MVC Module
 Now that we have the server-side taken care of, we can focus on bringing MVC to
 the client.
 
 We will create an AngularJS service that will connect with our NodeJS/Express 
 CRUD service.
 
-##Creating the Basic Structure
+## Creating the Basic Structure
 
 Go to the `public` folder and create a new sub-folder aclled `articles`.  In this new
 folder also create new file called `articles.client.model.js`.  In this file we 
@@ -534,7 +534,7 @@ angular.element(document).ready(function() {
 });
 ```
 
-##Creating our AngularJS module service
+## Creating our AngularJS module service
 We'll use a single AngularJS Service to communicate with our API endpoints using the 
 `$resource` factory method.
 
@@ -553,7 +553,7 @@ angular.module('articles').factory('Articles', ['$resource', function($resource)
 }]);
 ```
 
-##Setup the AngularJS module controller
+## Setup the AngularJS module controller
 In order to create a successful AngularJS app, we embed most of our logic into an
 AngularJS controller.  The controller will provide all methods necessary to perform
 CRUD operations on an `Article` via our new `Article` service.
@@ -579,7 +579,7 @@ Take note that the `ArticlesController` is using four injected services:
 
 Also notice that we bind to the `$scope` object, which we use to communicate between views and controllers.
 
-###CREATE
+### CREATE
 
 We include a `create()` method for our controller in the `public/articles/controllers/articles.client.controller.js` file:
 
@@ -598,7 +598,7 @@ $scope.create = function() {
 };
 ```
 
-###READ/LIST (findOne() and find())
+### READ/LIST (findOne() and find())
 We need to read all and a single document in the MongoDB/Mongoose collection.
 
 The following code is appended to `public/articles/controllers/articles.client.controller.js`:
@@ -615,7 +615,7 @@ $scope.findOne = function() {
 };
 ```
 
-###UPDATE
+### UPDATE
 
 We use `$scope.article` and the `Articles` serivce to communicate with the 
 HTTP endpoint for an UPDATE.  Make these changes to `public/articles/controllers/articles.client.controller.js`:
@@ -630,7 +630,7 @@ $scope.update = function() {
 };
 ```
 
-###DELETE
+### DELETE
 We use `$scope.article` and the `Articles` serivce to communicate with the 
 HTTP endpoint for a DELETE.  Make these changes to `public/articles/controllers/articles.client.controller.js`:
 
@@ -652,7 +652,7 @@ $scope.delete = function(article) {
 };
 ```
 
-#Implementing our AngularJS Views
+# Implementing our AngularJS Views
 
 We won't do much CRUD if we don't have AngularJS views.  Remember, we will have a minimal number
 of server-side templated views with an AngularJS approach.
@@ -660,7 +660,7 @@ of server-side templated views with an AngularJS approach.
 In order to create views for our CRUD, go ahead and create a new `views` subdirectory
 under our `public/articles` folder.
 
-##The create-article View
+## The create-article View
 
 Go to the `public/articles/views` folder and create `create-article.client.view.html`:
 
@@ -693,7 +693,7 @@ Go to the `public/articles/views` folder and create `create-article.client.view.
 *NOTE*: Remember that we'll insert this content into an area of our main server-side 
 page called `index.ejs`.
 
-##The view-article View
+## The view-article View
 
 To create the view, go to the `public/articles/views` folder and create a new file named `view-article.client.view.html`:
 
@@ -714,7 +714,7 @@ To create the view, go to the `public/articles/views` folder and create a new fi
 </section>
 ```
 
-##The edit-article View
+## The edit-article View
 
 To create the view go to the `public/articles/views` folder and create a new file named `edit-article.client.view.html`:
 
@@ -744,7 +744,7 @@ To create the view go to the `public/articles/views` folder and create a new fil
 </section>
 ```
 
-##The list-articles view
+## The list-articles view
 
 To create this view, go to the `public/articles/views` folder and create a new file named `list-articles.client.view.html`:
 
@@ -767,7 +767,7 @@ To create this view, go to the `public/articles/views` folder and create a new f
 </section>
 ```
 
-#Defining the AngularJS module routes
+# Defining the AngularJS module routes
 
 Go to the `public/articles` folder and create a new `config` folder. In your `config` 
 folder, create a new file named `articles.client.routes.js` that contains the following code:
@@ -792,7 +792,7 @@ angular.module('articles').config(['$routeProvider',
 ]);
 ```
 
-#Finalizing the Implementation
+# Finalizing the Implementation
 
 We've made a lot of new files and subdirectories for our client application.  We'll need
 to make changes to our `index.ejs` file in `app/views`:
@@ -867,3 +867,5 @@ angular.module('example').controller('ExampleController', ['$scope', 'Authentica
   }
 ]);
 ```
+
+Now, push all of this to your repo and we're done. All levels of MEAN have been addressed.
